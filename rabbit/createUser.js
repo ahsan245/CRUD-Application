@@ -1,6 +1,6 @@
 const amqp = require('amqplib/callback_api');
 
-exports.producer = (response) => {
+exports.producer = (request) => {
   // Create a connection to RabbitMQ server
   amqp.connect('amqp://localhost', (connectError, connection) => {
     if (connectError) {
@@ -18,9 +18,9 @@ exports.producer = (response) => {
       // Declare a queue
       channel.assertQueue(queueName, { durable: false });
 
-      // Publish the response message to the queue
-      channel.sendToQueue(queueName, Buffer.from(JSON.stringify(response)));
-      console.log('User creation response sent to queue:', response);
+      // Publish the request message to the queue
+      channel.sendToQueue(queueName, Buffer.from(JSON.stringify(request)));
+      console.log('User creation Request sent to queue:', request);
 
       // Close the connection after a timeout (adjust as needed)
       setTimeout(() => {

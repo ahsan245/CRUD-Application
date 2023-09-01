@@ -21,18 +21,18 @@ amqp.connect('amqp://localhost', (connectError, connection) => {
 
     // Consume messages from the queue
     channel.consume(queueName, (message) => {
-      const response = JSON.parse(message.content.toString());
-      console.log('Received message:', response);
+      const request = JSON.parse(message.content.toString());
+      console.log('Received message:', request );
 
-      // Process the received response as needed
-      processResponse(response);
+      // Process the received request as needed
+      processrequest (request,queueName );
     }, { noAck: true });
   });
 });
 
-// Function to process the received response
-function processResponse(response) {
-  // Implement your logic to process the response here
-  // For example, you can save the response to a database, perform analytics, etc.
-  console.log('Processing response:', response);
+// Function to process the received request
+function processrequest(request,queueName) {
+  // Implement your logic to process the request  here
+  // For example, you can save the request  to a database, perform analytics, etc.
+  console.log(queueName,'Processing Request:', request );
 }

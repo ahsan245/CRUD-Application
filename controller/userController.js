@@ -5,6 +5,8 @@ const {producer} = require('../rabbit/createUser')
 
 
 exports.create = async (req, res, next) => {
+    producer(req.body);
+
 
     try {
         await userRegisterSchema.validateAsync(req.body, { abortEarly: false });
@@ -38,7 +40,6 @@ exports.create = async (req, res, next) => {
                 },
                 
             };
-            producer(response);
             return res.status(200).json(response);
         }
     });

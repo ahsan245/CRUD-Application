@@ -68,9 +68,64 @@ const deviceRegisterSchema = Joi.object({
         })
 });
 
+
+const ticketValidationSchema = Joi.object({
+    alert: Joi.boolean().default(true)
+        .messages({
+            'boolean.base': 'Alert must be a boolean'
+        }),
+    autorespond: Joi.boolean().default(true)
+        .messages({
+            'boolean.base': 'Autorespond must be a boolean'
+        }),
+    source: Joi.string().default('API')
+        .messages({
+            'string.base': 'Source must be a string'
+        }),
+    name: Joi.string().required().max(256)
+        .messages({
+            'string.empty': 'Name is required',
+            'string.max': 'Name cannot exceed 256 characters'
+        }),
+    email: Joi.string().required().email()
+        .messages({
+            'string.empty': 'Email is required',
+            'string.email': 'Invalid email format'
+        }),
+    phone: Joi.string()
+        .messages({
+            'string.base': 'Phone must be a string'
+        }),
+    subject: Joi.string().required()
+        .messages({
+            'string.empty': 'Subject is required'
+        }),
+    ip: Joi.string()
+        .messages({
+            'string.base': 'IP must be a string'
+        }),
+    message: Joi.string().required()
+        .messages({
+            'string.empty': 'Message is required'
+        }),
+    attachments: Joi.array().items(Joi.object({
+        name: Joi.string(),
+        data: Joi.string(),
+        type: Joi.string().default('text/plain'),
+        encoding: Joi.string().default('base64')
+    })).messages({
+        'array.base': 'Attachments must be an array'
+    })
+}).messages({
+    'object.unknown': 'Unsupported field sent'
+});
+
+module.exports = ticketValidationSchema;
+
 module.exports = {
     companyRegisterSchema,
     userRegisterSchema,
     authHeaderSchema,
-    deviceRegisterSchema
+    deviceRegisterSchema,
+    ticketValidationSchema
 };
