@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const validationMessages = require('./message.json'); // Adjust the path to your messages.json file
 
 const companyRegisterSchema = Joi.object({
     display_name: Joi.string().required().messages({
@@ -37,7 +38,26 @@ const authHeaderSchema = Joi.object({
         })
 });
 
+const idValidationSchema = Joi.object({
+    id: Joi.string()
+        .custom((value, helpers) => {
+            if (!Types.ObjectId.isValid(value)) {
+                return helpers.error('any.invalid');
+            }
+            return value;
+        }, 'MongoDB ObjectId')
+        .required().messages(validationMessages.id)
+});
+
 const deviceRegisterSchema = Joi.object({
+    user: Joi.string().required().messages({
+        'string.empty': 'User is required',
+        'any.required': 'User is required'
+    }),
+    company: Joi.string().required().messages({
+        'string.empty': 'Company is required',
+        'any.required': 'Company is required'
+    }),
     name: Joi.string()
         .required()
         .max(256)
@@ -127,5 +147,6 @@ module.exports = {
     userRegisterSchema,
     authHeaderSchema,
     deviceRegisterSchema,
-    ticketValidationSchema
+    ticketValidationSchema,
+    idValidationSchema
 };

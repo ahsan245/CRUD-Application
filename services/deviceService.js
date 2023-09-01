@@ -1,5 +1,6 @@
 const { version } = require('joi');
 const Device = require('../models/deviceModel')
+const DeviceList = require('../models/deviceListModel')
 
 async function createDevice(params, callback) {
     
@@ -55,6 +56,8 @@ async function updateDevice(params, callback) {
             return callback(error);
         });
 }
+
+
 
 module.exports={
     createDevice,

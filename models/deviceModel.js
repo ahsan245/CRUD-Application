@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 
 const deviceSchema = new mongoose.Schema({
+    company :{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Company"
+    },
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
     name: {
         type: String,
         required: true,

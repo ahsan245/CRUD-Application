@@ -25,7 +25,7 @@ async function getCompany(params, callback) {
 async function createCompany(params, callback) {
     const token = generateAccessToken('Company', params._id);
     myCache.set("companyToken",token)
-    params.token = token; // Assign the generated token to the model
+    params.token = token; 
 
 
     

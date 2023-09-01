@@ -1,11 +1,13 @@
 const deviceService = require('../services/deviceService')
-const { deviceRegisterSchema } = require('../helpers/validationSchema')
+const { deviceRegisterSchema,idValidationSchema } = require('../helpers/validationSchema')
 
 
 exports.create = async (req, res, next) => {
 
     try {
         await deviceRegisterSchema.validateAsync(req.body, { abortEarly: false });
+        // await idValidationSchema.validateAsync({ id: req.params.user });
+        // await idValidationSchema.validateAsync({ id: req.params.company });
     } catch (error) {
         const errorMessages = error.details.map(detail => detail.message);
         return res.status(422).json({ errors: errorMessages });
@@ -14,6 +16,8 @@ exports.create = async (req, res, next) => {
 
 
     const model = {
+        user:req.body.user,
+        company: req.body.company,
         name: req.body.name,
         properties: req.body.properties,
         commands: req.body.commands,
@@ -31,6 +35,8 @@ exports.create = async (req, res, next) => {
                 timestamp_ms: Date.now(),
                 action: "create",
                 Device: {
+                    user:results.user,
+                    company: results.company,
                     uuid: results._id,
                     name: results.name,
                     properties: results.properties,

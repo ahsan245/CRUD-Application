@@ -1,0 +1,6 @@
+{
+    "id": {
+        "string.base": "Id must be a string",
+        "any.required": "Id is required"
+      }
+}
