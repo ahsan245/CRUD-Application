@@ -6,27 +6,26 @@ const NodeCache = require( "node-cache" );
 const myCache = new NodeCache({stdTTL:30});
 
 async function createUser(params, callback) {
-    const token = generateAccessToken('User', params._id);
-    myCache.set("userToken",token)
-    params.token = token; // Assign the generated token to the model
-
-
-    
     const userModel = new User(params);
-    userModel.save().then((response) => {
-        
-        return callback(null, response);
 
-    }
-    )
-        .catch((error) => {
+    userModel.save().then((response) => {
+        // Generate a token using the _id from the response
+        const token = generateAccessToken('User', response._id);
+        myCache.set("userToken",token)
+        
+        // Save the generated token inside the user model
+        userModel.token = token;
+
+        // Update the user model with the token
+        userModel.save().then((updatedUser) => {
+            return callback(null, updatedUser);
+        }).catch((error) => {
             return callback(error);
         });
-
-
-
+    }).catch((error) => {
+        return callback(error);
+    });
 }
-
 module.exports = 
 {
     createUser

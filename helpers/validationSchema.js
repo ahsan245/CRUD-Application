@@ -140,6 +140,36 @@ const ticketValidationSchema = Joi.object({
     'object.unknown': 'Unsupported field sent'
 });
 
+const deviceStateSchema = Joi.object({
+    device: Joi.string().required().messages({
+        'string.empty': 'Device is required',
+        'any.required': 'Device is required',
+      }),
+      company: Joi.string().required().messages({
+        'string.empty': 'Company is required',
+        'any.required': 'Company is required',
+      }),
+    
+    property: Joi.string().max(128).required().messages({
+      'string.empty': 'Property is required',
+      'string.max': 'Property cannot exceed 128 characters',
+      'any.required': 'Property is required',
+    }),
+    value: Joi.string().max(16).required().messages({
+      'string.empty': 'Value is required',
+      'string.max': 'Value cannot exceed 16 characters',
+      'any.required': 'Value is required',
+    }),
+    type: Joi.required().messages({
+      'any.required': 'Type is required',
+    }),
+    last_updated_ms: Joi.number().integer().required().messages({
+      'number.empty': 'Last Updated Milliseconds is required',
+      'number.integer': 'Last Updated Milliseconds must be an integer',
+      'any.required': 'Last Updated Milliseconds is required',
+    }),
+  });
+
 module.exports = ticketValidationSchema;
 
 module.exports = {
@@ -148,5 +178,6 @@ module.exports = {
     authHeaderSchema,
     deviceRegisterSchema,
     ticketValidationSchema,
-    idValidationSchema
+    idValidationSchema,
+    deviceStateSchema
 };

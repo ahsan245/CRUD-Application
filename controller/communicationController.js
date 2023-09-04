@@ -37,7 +37,7 @@ exports.create = async (req, res, next) => {
                     title: results.title,
                     description: results.description,
                     messages: results.messages,
-                    priority: results.priority
+                    priority: results.priority,
 
 
                 }

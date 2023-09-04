@@ -1,5 +1,6 @@
 const deviceService = require('../services/deviceService')
-const { deviceRegisterSchema,idValidationSchema } = require('../helpers/validationSchema')
+const { deviceRegisterSchema,idValidationSchema } = require('../helpers/validationSchema');
+const { model } = require('mongoose');
 
 
 exports.create = async (req, res, next) => {
@@ -123,5 +124,37 @@ exports.update = (req, res, next) => {
 };
 
 
+exports.getList = (req,res, next) => {
+    const model = {
+        id: req.params.id,
+        name: req.body.name,
+        properties: req.body.properties,
+        commands: req.body.commands,
+        usage: req.body.usage,
+        meta: req.body.meta,
+    };
+    deviceService.deviceList(model, (error, results) => {
+        if (error) {
+            return next(error);
+        } else {
+            const response = {
+                timestamp_ms: Date.now(),
+                action: "Get Device List Based on User Id",
+                DeviceList: results.map((result) => {
+                    return {
+                        uuid: result._id,
+                        name: result.name,
+                        properties: result.properties,
+                        commands: result.commands,
+                        usage: result.usage,
+                        meta: result.meta,
+                        version:result.version,
+                        
+                    };
+                }),
+            };
+            return res.status(200).json(response);
+        }
+    });
 
-
+};

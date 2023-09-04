@@ -58,6 +58,9 @@ function deviceAuthenticationToken(req, res, next) {
 
         const entityType = decoded.type;
         const entityUuid = decoded.uuid;
+        console.log("Decoded Object:", decoded);
+
+        console.log("Uuid", entityUuid);
 
         // Check if the entity type is 'Complain'
         if (entityType !== 'User') {
@@ -67,6 +70,13 @@ function deviceAuthenticationToken(req, res, next) {
         // Attach entity information to the request object
         req.entityType = entityType;
         req.entityUuid = entityUuid;
+
+        myCache.set("DevicePayLoad", req.entityType, req.entityUuid)
+        myCache.set("UserId", req.entityUuid);
+
+        const uuid = myCache.get("UserId")
+        console.log("cache", uuid);
+        
 
         next();
     });
@@ -105,7 +115,7 @@ function authenticationToken(req, res, next) {
 
             const entityType = decoded.type; // Get the entity type from the decoded payload
             const entityUuid = decoded.uuid; // Get the entity UUID from the decoded payload
-
+            console.log("Decoded Object:", entityType, entityUuid);
             // Check if the entity type is 'Complain'
             if (entityType !== 'User') {
                 return res.status(403).json({ message: 'Invalid entity type' });
@@ -196,12 +206,13 @@ function authenticationToken(req, res, next) {
 
 function generateAccessToken(entityType, entityUuid) {
     return jwt.sign({ type: entityType, uuid: entityUuid }, TOKEN_KEY, {
-        expiresIn: "1h"
+        expiresIn: "48h"
     });
 }
 
 module.exports = {
     authenticationToken,
     generateAccessToken,
-    deviceAuthenticationToken
+    deviceAuthenticationToken,
+
 };
