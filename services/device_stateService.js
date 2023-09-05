@@ -15,81 +15,41 @@ async function createDeviceState(params, callback) {
 }
 
 
-// async function updateDeviceState(params, callback) {
-//     const deviceId = params.device; // Assuming "device_uuid" is in the request
-//     const propertyValue = params.property; // Assuming you want the first property
-// console.log("params",propertyValue)
-//     // Check if the device with the provided ID exists in the Device table
-//     const existingDevice = await Device.findById(deviceId).exec();
-
-//     if (!existingDevice) {
-//         return callback(`Device with ID ${deviceId} not found`);
-//     }
-
-//     // Find the DeviceState document by deviceId
-//     const deviceState = await DeviceState.findOne({ device: deviceId }).exec();
-
-//     if (!deviceState) {
-//         return callback(`Device State Not Found for Device ID ${deviceId}`);
-//     }
-
-//     // Check if the property exists in the deviceState
-//     if (deviceState.property === propertyValue) {
-//         // Update the entire deviceState with data from params
-//         deviceState.set(params);
-//     } else {
-//         return callback(`Property ${propertyValue} not found in Device State`);
-//     }
-
-//     // Save the updated deviceState
-//     deviceState
-//         .save()
-//         .then((response) => {
-//             callback(null, response);
-//         })
-//         .catch((error) => {
-//             return callback(error);
-//         });
-// }
 async function updateDeviceState(device, callback) {
     const deviceId = device.device;
     const propertyValue = device.property;
 
-    // Check if the device with the provided ID exists in the Device table
-    const existingDevice = await Device.findById(deviceId).exec();
-
-    // if (!existingDevice) {
-    //     return callback(`Device with ID ${deviceId} not found`);
-    // }
-
-    // Find the DeviceState document by deviceId
-    const deviceState = await DeviceState.findOne({ device: deviceId }).exec();
-
-    // if (!deviceState) {
-    //     return callback(`Device State Not Found for Device ID ${deviceId}`);
-    // }
-
-    // Check if the property exists in the deviceState
-    if (deviceState.property === propertyValue) {
-        // Update the entire deviceState with data from the request
-        deviceState.set(device);
-    } else {
-        return callback(`Property ${propertyValue} not found in Device State`);
-    }
-
     try {
-        // Validate the updated deviceState against your schema (if needed)
-        // Example validation:
-        // await deviceStateSchema.validateAsync(deviceState.toObject(), { abortEarly: false });
+        // Find all DeviceState documents with the same device and property
+        const matchingDeviceStates = await DeviceState.find({ device: deviceId, property: propertyValue }).exec();
+
+        if (!matchingDeviceStates || matchingDeviceStates.length === 0) {
+            return callback(`No matching Device State found for Device ID ${deviceId} and Property ${propertyValue}`);
+        }
+
+        // Update each matching DeviceState document
+        for (const matchingDeviceState of matchingDeviceStates) {
+            // Update the entire deviceState with data from the request
+            matchingDeviceState.set(device);
+            console.log("Updated Device State", matchingDeviceState);
+
+            try {
+                // Validate the updated deviceState against your schema (if needed)
+                // Example validation:
+                // await deviceStateSchema.validateAsync(matchingDeviceState.toObject(), { abortEarly: false });
+            } catch (error) {
+                return callback(error);
+            }
+
+            // Save the updated deviceState
+            await matchingDeviceState.save();
+        }
+
+        callback(null, matchingDeviceStates); // Return an array of updated DeviceStates
     } catch (error) {
         return callback(error);
     }
-
-    // Save the updated deviceState
-    const savedDeviceState = await deviceState.save();
-    callback(null, savedDeviceState);
 }
-
 
 
 module.exports={

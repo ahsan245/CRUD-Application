@@ -62,7 +62,7 @@ exports.update = async (req, res, next) => {
 
     for (const device of deviceList) {
         const model = {
-            device: device.device[0],
+            device: device.device,
             property: device.properties[0].property,
             value: device.properties[0].value,
             type: device.properties[0].type,
@@ -102,56 +102,6 @@ exports.update = async (req, res, next) => {
 
 
 
-// exports.update = async (req, res, next) => {
 
-//     // try {
-//     //     await deviceStateSchema.validateAsync(req.body, { abortEarly: false });
-//     //     // await idValidationSchema.validateAsync({ id: req.params.user });
-
-//     // } catch (error) {
-//     //     const errorMessages = error.details.map(detail => detail.message);
-//     //     return res.status(422).json({ errors: errorMessages });
-//     // }
-
-
-
-//     const model = {
-//         device: req.body.device,
-//         property: req.body.properties[0].property,
-//         value: req.body.properties[0].value,
-//         type: req.body.properties[0].type,
-//         last_updated_ms: req.body.properties[0].last_updated_ms,
-
-//     };
-
-//     deviceStateService.updateDeviceState(model, (error, results) => {
-//         if (error) {
-//             console.error("Error in Updating DeviceState:", error);
-//             return res.status(500).json({ error: "Error in Updating DeviceState", message: error.message });
-
-//         } else {
-//             const response = {
-
-//                 timestamp_ms: Date.now(),
-//                 action: "Update",
-//                 DeviceState: {
-//                     device: results.device,
-//                     company: results.company,
-//                     property: results.property,
-//                     name: results.name,
-//                     value: results.value,
-//                     type: results.type,
-//                     last_updated_ms: results.last_updated_ms,
-//                 },
-
-//             };
-//             const jsonResponse = JSONBig.stringify(response);
-
-//             return res.status(200).json(JSONBig.parse(jsonResponse)); // Parse it back to JSON
-
-//         }
-//     });
-
-// };
 
 
