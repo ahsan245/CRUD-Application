@@ -88,7 +88,7 @@ exports.update = async (req, res, next) => {
                     const response = {
                         timestamp_ms: Date.now(),
                         action: "Update",
-                        DeviceStates: updatedDeviceStates,
+                        List: updatedDeviceStates,
                     };
 
                     const jsonResponse = JSONBig.stringify(response);
