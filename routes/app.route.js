@@ -3,7 +3,7 @@ const userController = require ("../controller/userController")
 const deviceController = require ("../controller/deviceController")
 const express =require("express")
 const router = express.Router()
-const { authenticationToken, deviceAuthenticationToken } = require('../middleware/auth'); // Adjust the path as needed
+const { authenticationToken, deviceAuthenticationToken } = require('../middleware/auth'); // Adjust the path as needss
 
 
 //Company Routes
